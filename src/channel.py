@@ -11,7 +11,6 @@ class Channel:
     # получение YT_API_KEY из переменных окружения с помощью os
     api_key: str = os.getenv('YT_API_KEY')
 
-
     # создать специальный объект для работы с API
     youtube = build('youtube', 'v3', developerKey=api_key)
 
@@ -22,9 +21,33 @@ class Channel:
         self.title = self.channel["items"][0]["snippet"]["title"]
         self.description = self.channel["items"][0]["snippet"]["description"]
         self.url = f"https://www.youtube.com/channel/{self.__channel_id}"
-        self.subscribers = self.channel["items"][0]['statistics']['subscriberCount']
+        self.subscribers = int(self.channel["items"][0]['statistics']['subscriberCount'])
         self.video_count = self.channel["items"][0]['statistics']['videoCount']
         self.views = self.channel["items"][0]['statistics']['viewCount']
+
+    def __str__(self):
+        return f"{self.title} ({self.url})"
+
+    def __add__(self, other):
+        return self.subscribers + other.subscribers
+
+    def __sub__(self, other):
+        return self.subscribers - other.subscribers
+
+    def __gt__(self, other):
+        return self.subscribers > other.subscribers
+
+    def __ge__(self, other):
+        return self.subscribers >= other.subscribers
+
+    def __lt__(self, other):
+        return self.subscribers < other.subscribers
+
+    def __le__(self, other):
+        return self.subscribers <= other.subscribers
+
+    def __eq__(self, other):
+        return self.subscribers == other.subscribers
 
     @classmethod
     def get_service(cls):
@@ -40,6 +63,14 @@ class Channel:
         print(dict_to_print)
 
     def to_json(self, file_name):
-        with open(file_name, "w") as file:
-            json.dump(self.channel, file)
-
+        attr_dict = {
+            "__channel_id": self.__channel_id,
+            "title": self.title,
+            "description": self.description,
+            "url": self.url,
+            "subscribers": self.subscribers,
+            "video_count": self.video_count,
+            "views": self.views,
+        }
+        with open(file_name, "w", encoding="utf-8") as file:
+            json.dump(attr_dict, file, ensure_ascii=False)
