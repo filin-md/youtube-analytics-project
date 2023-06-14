@@ -5,15 +5,14 @@ import os
 from googleapiclient.discovery import build
 
 
+# получение YT_API_KEY из переменных окружения с помощью os
+api_key: str = os.getenv('YT_API_KEY')
+# создать специальный объект для работы с API
+youtube_obj = build('youtube', 'v3', developerKey=api_key)
+
 class Channel:
     """Класс для ютуб-канала"""
-
-    # получение YT_API_KEY из переменных окружения с помощью os
-    api_key: str = os.getenv('YT_API_KEY')
-
-    # создать специальный объект для работы с API
-    youtube = build('youtube', 'v3', developerKey=api_key)
-
+    youtube = youtube_obj
     def __init__(self, channel_id: str) -> None:
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
         self.__channel_id = channel_id
