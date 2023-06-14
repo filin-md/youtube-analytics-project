@@ -3,9 +3,10 @@ from src.channel import youtube_obj
 
 class Video:
     def __init__(self, video_id):
-        self.video_id = video_id
+
         video_response = youtube_obj.videos().list(part='snippet,statistics,contentDetails,topicDetails', id=video_id).execute()
 
+        self.video_id = video_id
         self.title = video_response['items'][0]['snippet']['title']
         self.view_count = video_response['items'][0]['statistics']['viewCount']
         self.like_count = video_response['items'][0]['statistics']['likeCount']
